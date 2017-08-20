@@ -56,23 +56,33 @@ Here is an example using the `YCrCb` color space and HOG parameters of `orientat
 
 #### 2. Explain how you settled on your final choice of HOG parameters.
 
-I tried various combinations of parameters and...
+I tried various combinations of HOG parameters and found the following combination can provide the lowest test accuracy:
+
+| Parameter        | Value   | 
+|:-------------:|:-------------:| 
+| Orientation bins     | 9        | 
+| pixels per cell      | 8x8      |
+| cells per block     | 2x2      |
 
 #### 3. Describe how (and identify where in your code) you trained a classifier using your selected HOG features (and color features if you used them).
 
-I trained a linear SVM using...
+The code for this step is contained at lines 69 through 106 in`train.py`.
 
-###Sliding Window Search
+I trained a linear SVM using YCrCb 3-channel HOG features, spatially binned color and histograms of color. The test accuracy was 99.44%.
 
-####1. Describe how (and identify where in your code) you implemented a sliding window search.  How did you decide what scales to search and how much to overlap windows?
+### Sliding Window Search
 
-I decided to search random window positions at random scales all over the image and came up with this (ok just kidding I didn't actually ;):
+#### 1. Describe how (and identify where in your code) you implemented a sliding window search.  How did you decide what scales to search and how much to overlap windows?
+
+The code for this step is contained at lines 104 through 143 and 216 through 219 in`detect.py`.
+
+I tried several scales and overlapping ranges. The 1.5 scale and 50% and 75% overlap between windows in both the vertical and horizontal directions provided the best result:
 
 ![alt text][image3]
 
-####2. Show some examples of test images to demonstrate how your pipeline is working.  What did you do to optimize the performance of your classifier?
+#### 2. Show some examples of test images to demonstrate how your pipeline is working.  What did you do to optimize the performance of your classifier?
 
-Ultimately I searched on two scales using YCrCb 3-channel HOG features plus spatially binned color and histograms of color in the feature vector, which provided a nice result.  Here are some example images:
+Ultimately I searched on 1 scale with two different overlapping areas using YCrCb 3-channel HOG features plus spatially binned color and histograms of color in the feature vector, which provided a nice result.  Here are some example images:
 
 ![alt text][image4]
 ---
@@ -80,23 +90,28 @@ Ultimately I searched on two scales using YCrCb 3-channel HOG features plus spat
 ### Video Implementation
 
 #### 1. Provide a link to your final video output.  Your pipeline should perform reasonably well on the entire project video (somewhat wobbly or unstable bounding boxes are ok as long as you are identifying the vehicles most of the time with minimal false positives.)
+
 Here's a [link to my video result](./output_videos/project_video.mp4)
 
-####2. Describe how (and identify where in your code) you implemented some kind of filter for false positives and some method for combining overlapping bounding boxes.
+#### 2. Describe how (and identify where in your code) you implemented some kind of filter for false positives and some method for combining overlapping bounding boxes.
+
+The code for this step is contained at lines 243 through 256 in`detect.py`.
 
 I recorded the positions of positive detections in each frame of the video.  From the positive detections I created a heatmap and then thresholded that map to identify vehicle positions.  I then used `scipy.ndimage.measurements.label()` to identify individual blobs in the heatmap.  I then assumed each blob corresponded to a vehicle.  I constructed bounding boxes to cover the area of each blob detected.  
 
-Here's an example result showing the heatmap from a series of frames of video, the result of `scipy.ndimage.measurements.label()` and the bounding boxes then overlaid on the last frame of video:
+Here's an example result showing the heatmap from the test images, the result of `scipy.ndimage.measurements.label()` and the bounding boxes then overlaid on the test images:
 
-### Here are six frames and their corresponding heatmaps:
+### Here are five test images and their corresponding heatmaps:
 
 ![alt text][image5]
-
-### Here is the output of `scipy.ndimage.measurements.label()` on the integrated heatmap from all six frames:
 ![alt text][image6]
-
-### Here the resulting bounding boxes are drawn onto the last frame in the series:
 ![alt text][image7]
+![alt text][image8]
+![alt text][image9]
+
+
+### Here the resulting bounding boxes are drawn onto the test image:
+![alt text][image10]
 
 
 ---
@@ -113,7 +128,7 @@ There are at least two shortcomings in my pipeline:
 
 ![alt text][image11]
 
-To tackle the detection speed issue, I'd like to the deep learning approaches. I believe it should be able to run in real time based on my experience on the project 3.
+To tackle the detection speed issue, I'd like to try the deep learning approaches. I believe it should be able to run in real time based on my experience on the project 3.
 
 I might be able to lower the generalization error by using the Udacity Annotated Driving Dataset.
 
