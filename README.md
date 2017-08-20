@@ -41,15 +41,15 @@ You're reading it!
 
 #### 1. Explain how (and identify where in your code) you extracted HOG features from the training images.
 
-The code for this step is contained at lines 18 through 41 in`feature_extraction.py`. I originally used the `skimage.hog()` function to extract hog features, but it was too slow. So I tried opencv hog function and it improved the performance by two times. I still kept the `skimage.hog()` function to visualize the hog feature for this writeup.
+The code for this step is contained at lines 18 through 41 in`feature_extraction.py`. I originally used the `skimage.hog()` function to extract HOG features, but it was too slow. So I switched to opencv `cv2.HOGDescriptor()` function and it improved the performance by two times. I still kept the `skimage.hog()` function to visualize the HOG features for this writeup.
 
 I started by reading in all the `vehicle` and `non-vehicle` images.  Here is an example of one of each of the `vehicle` and `non-vehicle` classes:
 
 ![alt text][image1]
 
-I then explored different color spaces and different `skimage.hog()` parameters (`orientations`, `pixels_per_cell`, and `cells_per_block`).  I grabbed random images from each of the two classes and displayed them to get a feel for what the `skimage.hog()` output looks like.
+I then explored different color spaces and different `cv2.HOGDescriptor()` parameters (`nbins`, `cellSize`, and `blockSize`).  I grabbed random images from each of the two classes and displayed them to get a feel for what the `skimage.hog()` output looks like.
 
-Here is an example using the `YCrCb` color space and HOG parameters of `orientations=9`, `pixels_per_cell=(8, 8)` and `cells_per_block=(2, 2)`:
+Here is an example using the `YCrCb` color space and HOG parameters of `nbins=9`, `cellSize=(8, 8)` and `blockSize=(16, 16)`:
 
 
 ![alt text][image2]
@@ -61,8 +61,8 @@ I tried various combinations of HOG parameters and found the following combinati
 | Parameter        | Value   | 
 |:-------------:|:-------------:| 
 | Orientation bins     | 9        | 
-| pixels per cell      | 8x8      |
-| cells per block     | 2x2      |
+|cell size      | 8x8      |
+| block size     | 16x16      |
 
 #### 3. Describe how (and identify where in your code) you trained a classifier using your selected HOG features (and color features if you used them).
 
